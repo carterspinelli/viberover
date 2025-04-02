@@ -29,6 +29,7 @@ const KeyDisplay = ({
 const GameHUD = () => {
   const { health, energy, velocity } = useRover();
   const { isMuted, toggleMute } = useAudio();
+  const { camera } = useThree();
 
   // Get keyboard inputs for visual feedback with selective state reading
   const forward = useKeyboardControls<Controls>(state => state[Controls.forward]);
@@ -44,8 +45,8 @@ const GameHUD = () => {
   };
 
   return (
-    <Html>
-      <div className="fixed left-0 top-0 w-64 p-4 pointer-events-none" style={{ position: 'fixed', zIndex: 1000 }}> {/* Changed position to left and top */}
+    <Html transform={false} fullscreen>
+      <div className="fixed left-0 top-0 w-64 p-4" style={{ pointerEvents: 'auto' }}> {/* Changed position to left and top */}
         <div className="bg-black bg-opacity-60 p-3 rounded-lg text-white"> {/* Removed max-w-md and mx-auto */}
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-xl font-bold">Mars Rover Status</h2>
