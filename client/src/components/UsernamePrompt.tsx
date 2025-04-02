@@ -97,10 +97,10 @@ export default function UsernamePrompt({ onSubmit }: UsernamePromptProps) {
                 d="M8,6 Q12,14 10,18 Q18,10 8,6"
               />
             </svg>
-            MARS ROVER MISSION
+            VIBEROVER
           </CardTitle>
           <CardDescription className="text-center text-amber-200/70 mt-2">
-            Enter your pilot name to begin Mars exploration
+            Enter your pilot name to begin your Vibeverse journey
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
@@ -131,12 +131,12 @@ export default function UsernamePrompt({ onSubmit }: UsernamePromptProps) {
               className="w-full h-12 font-bold tracking-wider transition-all bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-600 hover:to-amber-500 border-none" 
               disabled={!username.trim()}
             >
-              BEGIN MARS EXPEDITION
+              BEGIN VIBEVERSE JOURNEY
             </Button>
           </form>
         </CardContent>
         <CardFooter className="text-xs text-center justify-center text-amber-200/50 pt-0 pb-4">
-          Mars Rover Mission Control · Established 2025
+          VIBEROVER Mission Control · Established 2025
         </CardFooter>
       </Card>
       
