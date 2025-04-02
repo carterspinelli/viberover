@@ -136,7 +136,7 @@ export default function UsernamePrompt({ onSubmit }: UsernamePromptProps) {
           </form>
         </CardContent>
         <CardFooter className="text-xs text-center justify-center text-amber-200/50 pt-0 pb-4">
-          VIBEROVER Mission Control · Established 2025
+          VIBEROVER · Established 2025
         </CardFooter>
       </Card>
       
