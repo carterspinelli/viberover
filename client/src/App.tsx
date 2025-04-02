@@ -2,11 +2,12 @@ import { Suspense, useEffect, useState } from "react";
 import { KeyboardControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useAudio } from "./lib/stores/useAudio";
-import { useRover } from "./lib/stores/useRover";
+import { useIsMobile } from "./hooks/use-is-mobile";
 import "@fontsource/inter";
 import Game from "./components/Game";
 import UsernamePrompt from "./components/UsernamePrompt";
 import GameHUD from "./components/GameHUD";
+import MobileTouchControls from "./components/MobileTouchControls";
 
 // Define an enum for controls to ensure type safety
 export enum Controls {
@@ -54,6 +55,7 @@ function App() {
   const [username, setUsername] = useState<string>('');
   const [portalParams, setPortalParams] = useState(getPortalParams());
   const [isLoaded, setIsLoaded] = useState(false);
+  const isMobile = useIsMobile();
 
   // Setup initial state based on URL params if coming from a portal
   useEffect(() => {
@@ -117,7 +119,7 @@ function App() {
   };
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
+    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', touchAction: 'none' }}>
       {!showGame ? (
         <UsernamePrompt onSubmit={setUsername} />
       ) : (
@@ -135,6 +137,7 @@ function App() {
                 antialias: true,
                 powerPreference: "default"
               }}
+              style={{ touchAction: 'none' }}
             >
               <color attach="background" args={["#000000"]} />
               <fog attach="fog" args={["#270000", 30, 90]} />
@@ -147,6 +150,9 @@ function App() {
               </Suspense>
             </Canvas>
             <GameHUD username={username} />
+            
+            {/* Mobile touch controls that directly use the rover store */}
+            <MobileTouchControls setControlState={() => {}} />
           </>
         </KeyboardControls>
       )}

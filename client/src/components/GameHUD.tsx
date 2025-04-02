@@ -3,6 +3,7 @@ import { useRef, useEffect, useState } from "react";
 import { useKeyboardControls } from "@react-three/drei";
 import { useRover } from "../lib/stores/useRover";
 import { useAudio } from "../lib/stores/useAudio";
+import { useIsMobile } from "../hooks/use-is-mobile";
 import { Controls } from "../App";
 
 // A visual key component to show which keys are pressed
@@ -31,6 +32,10 @@ interface GameHUDProps {
 const GameHUD = ({ username }: GameHUDProps) => {
   const { energy, velocity } = useRover();
   const { isMuted, toggleMute } = useAudio();
+  const isMobile = useIsMobile();
+  
+  // Option to collapse the HUD on mobile for more screen space
+  const [collapsed, setCollapsed] = useState(false);
 
   // Get keyboard inputs for visual feedback with selective state reading
   const forward = useKeyboardControls<Controls>(state => state[Controls.forward]);
@@ -45,18 +50,55 @@ const GameHUD = ({ username }: GameHUDProps) => {
     if (Math.abs(velocity) < 0.1 && Math.abs(velocity) > 0) return "⊗"; // Braking indicator
     return "•";
   };
+  
+  // Mobile-specific compact HUD
+  if (isMobile && collapsed) {
+    return (
+      <div className="fixed left-2 top-2 z-50" style={{ pointerEvents: 'auto' }}>
+        <div className="bg-black bg-opacity-60 p-2 rounded-lg text-white">
+          <div className="flex justify-between items-center">
+            <span className="text-sm mr-2">{Math.abs(velocity).toFixed(1)} m/s</span>
+            <span className={`w-6 h-6 flex items-center justify-center rounded-full 
+              ${Math.abs(velocity) > 5 ? 'bg-green-600' : 
+                Math.abs(velocity) > 0.1 ? 'bg-blue-700' : 'bg-gray-700'}`}>
+              {getDirectionIndicator()}
+            </span>
+            <button 
+              onClick={() => setCollapsed(false)}
+              className="ml-2 bg-gray-800 rounded p-1"
+            >
+              ↘️
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="fixed left-4 top-4 w-64 z-50" style={{ pointerEvents: 'auto' }}>
+    <div 
+      className={`fixed z-50 ${isMobile ? 'left-2 top-2 w-[calc(100%-1rem)] max-w-[18rem]' : 'left-4 top-4 w-64'}`} 
+      style={{ pointerEvents: 'auto' }}
+    >
       <div className="bg-black bg-opacity-60 p-3 rounded-lg text-white">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-xl font-bold">Mars Rover Status</h2>
-          <button 
-            className="bg-gray-700 hover:bg-gray-600 rounded px-2 py-1 text-xs pointer-events-auto"
-            onClick={toggleMute}
-          >
-            {isMuted ? "🔇 Unmute" : "🔊 Mute"}
-          </button>
+          <h2 className="text-xl font-bold">VIBEROVER</h2>
+          <div className="flex">
+            {isMobile && (
+              <button 
+                onClick={() => setCollapsed(true)}
+                className="mr-2 bg-gray-700 hover:bg-gray-600 rounded px-2 py-1 text-xs"
+              >
+                ↖️
+              </button>
+            )}
+            <button 
+              className="bg-gray-700 hover:bg-gray-600 rounded px-2 py-1 text-xs pointer-events-auto"
+              onClick={toggleMute}
+            >
+              {isMuted ? "🔇" : "🔊"}
+            </button>
+          </div>
         </div>
         
         {/* Pilot name */}
@@ -100,26 +142,41 @@ const GameHUD = ({ username }: GameHUDProps) => {
           </div>
         </div>
 
-        {/* Visual controls display */}
-        <div className="mt-3 mb-1 text-center">
-          <div className="flex justify-center mb-2">
-            <KeyDisplay isPressed={forward} label="W" />
+        {/* Visual controls display - only show on desktop */}
+        {!isMobile && (
+          <div className="mt-3 mb-1 text-center">
+            <div className="flex justify-center mb-2">
+              <KeyDisplay isPressed={forward} label="W" />
+            </div>
+            <div className="flex justify-center">
+              <KeyDisplay isPressed={leftward} label="A" />
+              <KeyDisplay isPressed={backward} label="S" />
+              <KeyDisplay isPressed={rightward} label="D" />
+            </div>
           </div>
-          <div className="flex justify-center">
-            <KeyDisplay isPressed={leftward} label="A" />
-            <KeyDisplay isPressed={backward} label="S" />
-            <KeyDisplay isPressed={rightward} label="D" />
-          </div>
-        </div>
+        )}
 
-        {/* Controls reminder */}
-        <div className="mt-3 grid grid-cols-1 gap-1 text-xs text-gray-300">
-          <div>W: Move Forward (Max: 7.00 m/s)</div>
-          <div>S: When moving forward - Brake to stop</div>
-          <div>S: When stopped - Move Backward (Max: 7.00 m/s)</div>
-          <div>A: Turn Left</div>
-          <div>D: Turn Right</div>
-          <div>M: Toggle Sound</div>
+        {/* Controls reminder - simplified on mobile */}
+        <div className={`mt-3 grid grid-cols-1 gap-1 text-xs text-gray-300 ${isMobile ? 'text-[10px]' : ''}`}>
+          {!isMobile ? (
+            <>
+              <div>W: Move Forward (Max: 7.00 m/s)</div>
+              <div>S: When moving forward - Brake to stop</div>
+              <div>S: When stopped - Move Backward (Max: 7.00 m/s)</div>
+              <div>A: Turn Left</div>
+              <div>D: Turn Right</div>
+              <div>M: Toggle Sound</div>
+            </>
+          ) : (
+            <>
+              <div className="flex justify-between">
+                <div>↑: Forward</div>
+                <div>↓: Brake/Back</div>
+                <div>←→: Turn</div>
+                <div>B: Boost</div>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </div>
