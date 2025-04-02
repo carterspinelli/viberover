@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import MarsRover from "./MarsRover";
@@ -9,12 +9,15 @@ import { useAudio } from "../lib/stores/useAudio";
 import { useGame } from "../lib/stores/useGame";
 import * as THREE from "three";
 
-const Game = () => {
+interface GameProps {
+  username: string;
+}
+
+const Game = ({ username }: GameProps) => {
   const { camera } = useThree();
   const { backgroundMusic, isMuted } = useAudio();
   const { position, rotation, velocity } = useRover();
   const { phase, start } = useGame();
-  const [username, setUsername] = useState<string>('');
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   
   // Camera smoothing
@@ -73,24 +76,18 @@ const Game = () => {
 
   return (
     <>
-      {!username ? (
-        <UsernamePrompt onSubmit={setUsername} />
-      ) : (
-        <>
-          <PerspectiveCamera 
-            ref={cameraRef}
-            makeDefault 
-            position={[0, 5, 10]} 
-            fov={60}
-            near={0.1}
-            far={1000}
-          />
-          
-          <MarsEnvironment />
-          <MarsRover />
-          <GameHUD username={username} />
-        </>
-      )}
+      <PerspectiveCamera 
+        ref={cameraRef}
+        makeDefault 
+        position={[0, 5, 10]} 
+        fov={60}
+        near={0.1}
+        far={1000}
+      />
+      
+      <MarsEnvironment />
+      <MarsRover />
+      <GameHUD username={username} />
     </>
   );
 };

@@ -1,9 +1,10 @@
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { KeyboardControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { useAudio } from "./lib/stores/useAudio";
 import "@fontsource/inter";
 import Game from "./components/Game";
+import UsernamePrompt from "./components/UsernamePrompt";
 
 // Define an enum for controls to ensure type safety
 export enum Controls {
@@ -26,6 +27,7 @@ const controlsMap = [
 // Main App component
 function App() {
   const { setBackgroundMusic, setHitSound, toggleMute } = useAudio();
+  const [username, setUsername] = useState<string>('');
 
   // Setup audio resources
   useEffect(() => {
@@ -55,28 +57,32 @@ function App() {
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
-      <KeyboardControls map={controlsMap}>
-        <Canvas
-          shadows
-          camera={{
-            position: [0, 5, 10],
-            fov: 60,
-            near: 0.1,
-            far: 1000
-          }}
-          gl={{
-            antialias: true,
-            powerPreference: "default"
-          }}
-        >
-          <color attach="background" args={["#000000"]} />
-          <fog attach="fog" args={["#270000", 30, 90]} />
-          
-          <Suspense fallback={null}>
-            <Game />
-          </Suspense>
-        </Canvas>
-      </KeyboardControls>
+      {!username ? (
+        <UsernamePrompt onSubmit={setUsername} />
+      ) : (
+        <KeyboardControls map={controlsMap}>
+          <Canvas
+            shadows
+            camera={{
+              position: [0, 5, 10],
+              fov: 60,
+              near: 0.1,
+              far: 1000
+            }}
+            gl={{
+              antialias: true,
+              powerPreference: "default"
+            }}
+          >
+            <color attach="background" args={["#000000"]} />
+            <fog attach="fog" args={["#270000", 30, 90]} />
+            
+            <Suspense fallback={null}>
+              <Game username={username} />
+            </Suspense>
+          </Canvas>
+        </KeyboardControls>
+      )}
     </div>
   );
 }
