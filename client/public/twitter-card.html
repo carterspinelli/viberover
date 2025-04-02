@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIBEROVER: Mars Exploration Game</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Helvetica Neue', Arial, sans-serif;
+      background-color: #0f0f0f;
+      color: #fff;
+      line-height: 1.6;
+    }
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #1a1a1a;
+      min-height: 100vh;
+    }
+    .card {
+      background-color: #222;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      margin-bottom: 30px;
+    }
+    .card-image {
+      width: 100%;
+      height: auto;
+    }
+    .card-content {
+      padding: 20px 30px 30px;
+    }
+    h1 {
+      font-size: 28px;
+      margin: 0 0 15px 0;
+      color: #ff8020;
+    }
+    p {
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #ff5a00, #ff8020);
+      color: white;
+      text-decoration: none;
+      padding: 12px 30px;
+      border-radius: 30px;
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 10px;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(255, 80, 0, 0.4);
+    }
+    .features {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 20px;
+    }
+    .feature {
+      flex: 1;
+      min-width: 200px;
+      padding: 15px;
+      margin: 10px;
+      background-color: rgba(255, 80, 0, 0.1);
+      border-radius: 10px;
+      border-left: 3px solid #ff8020;
+    }
+    .feature h3 {
+      margin-top: 0;
+      color: #ff8020;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 10px;
+      }
+      .card-content {
+        padding: 15px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      p {
+        font-size: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <img src="./viberover-thumbnail.png" alt="VIBEROVER Mars Exploration Game" class="card-image">
+      <div class="card-content">
+        <h1>VIBEROVER: Mars Exploration Game</h1>
+        <p>DISCOVER MARS & BEYOND: Navigate the red planet's mysteries in #VibeRover, then transcend reality as you find the hidden vibeverse portal. An immersive 3D adventure where exploration leads to cosmic connection.</p>
+        <a href="/" class="cta-button">Play Now</a>
+        
+        <div class="features">
+          <div class="feature">
+            <h3>Explore Mars</h3>
+            <p>Navigate challenging terrain across the red planet with realistic physics and controls.</p>
+          </div>
+          <div class="feature">
+            <h3>Discover Portals</h3>
+            <p>Find mysterious portals that connect to the wider Vibeverse ecosystem.</p>
+          </div>
+          <div class="feature">
+            <h3>3D Immersion</h3>
+            <p>Experience Mars in stunning 3D with realistic graphics and atmospheric effects.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
