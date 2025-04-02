@@ -100,7 +100,7 @@ export default function UsernamePrompt({ onSubmit }: UsernamePromptProps) {
             VIBEROVER
           </CardTitle>
           <CardDescription className="text-center text-amber-200/70 mt-2">
-            Enter your pilot name to begin your Vibeverse journey
+            Enter your pilot name to begin your VibeRover Mars journey
           </CardDescription>
         </CardHeader>
         <CardContent className="pt-6">
@@ -131,7 +131,7 @@ export default function UsernamePrompt({ onSubmit }: UsernamePromptProps) {
               className="w-full h-12 font-bold tracking-wider transition-all bg-gradient-to-r from-red-700 to-amber-600 hover:from-red-600 hover:to-amber-500 border-none" 
               disabled={!username.trim()}
             >
-              BEGIN VIBEVERSE JOURNEY
+              BEGIN MARS JOURNEY
             </Button>
           </form>
         </CardContent>
