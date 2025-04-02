@@ -29,24 +29,24 @@ const KeyDisplay = ({
 const GameHUD = () => {
   const { health, energy, velocity } = useRover();
   const { isMuted, toggleMute } = useAudio();
-  
+
   // Get keyboard inputs for visual feedback with selective state reading
   const forward = useKeyboardControls<Controls>(state => state[Controls.forward]);
   const backward = useKeyboardControls<Controls>(state => state[Controls.backward]);
   const leftward = useKeyboardControls<Controls>(state => state[Controls.leftward]);
   const rightward = useKeyboardControls<Controls>(state => state[Controls.rightward]);
-  
+
   // Direction indicator using an arrow
   const getDirectionIndicator = () => {
     if (velocity > 0.1) return "↑";
     if (velocity < -0.1) return "↓";
     return "•";
   };
-  
+
   return (
     <Html fullscreen>
-      <div className="fixed left-0 bottom-0 w-full p-4 pointer-events-none">
-        <div className="bg-black bg-opacity-60 p-3 rounded-lg max-w-md mx-auto text-white">
+      <div className="fixed left-0 top-0 w-64 p-4 pointer-events-none"> {/* Changed position to left and top */}
+        <div className="bg-black bg-opacity-60 p-3 rounded-lg text-white"> {/* Removed max-w-md and mx-auto */}
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-xl font-bold">Mars Rover Status</h2>
             <button 
@@ -56,7 +56,7 @@ const GameHUD = () => {
               {isMuted ? "🔇 Unmute" : "🔊 Mute"}
             </button>
           </div>
-          
+
           {/* Health bar */}
           <div className="mb-2">
             <div className="flex justify-between mb-1">
@@ -70,7 +70,7 @@ const GameHUD = () => {
               ></div>
             </div>
           </div>
-          
+
           {/* Energy bar */}
           <div className="mb-2">
             <div className="flex justify-between mb-1">
@@ -84,7 +84,7 @@ const GameHUD = () => {
               ></div>
             </div>
           </div>
-          
+
           {/* Speed indicator with direction */}
           <div className="mb-2">
             <div className="flex justify-between items-center">
@@ -98,7 +98,7 @@ const GameHUD = () => {
               </div>
             </div>
           </div>
-          
+
           {/* Visual controls display */}
           <div className="mt-3 mb-1 text-center">
             <div className="flex justify-center mb-2">
@@ -110,7 +110,7 @@ const GameHUD = () => {
               <KeyDisplay isPressed={rightward} label="D" />
             </div>
           </div>
-          
+
           {/* Controls reminder */}
           <div className="mt-3 grid grid-cols-2 gap-1 text-xs text-gray-300">
             <div>W: Move Forward</div>
