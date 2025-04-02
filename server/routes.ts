@@ -28,19 +28,38 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Twitter/X image serving with proper content type
+  // Twitter/X image serving with proper content type (supports both SVG and PNG)
   app.get("/viberover-thumbnail", (req: Request, res: Response) => {
-    const filePath = path.resolve(process.cwd(), './client/public/viberover-thumbnail.png');
+    // Use SVG as our primary format since it's already created
+    const filePath = path.resolve(process.cwd(), './client/public/viberover-thumbnail.svg');
+    
+    try {
+      const image = fs.readFileSync(filePath);
+      
+      // Set proper image headers for SVG
+      res.setHeader('Content-Type', 'image/svg+xml');
+      res.setHeader('Cache-Control', 'public, max-age=86400');
+      res.send(image);
+    } catch (error) {
+      console.error('Error serving Twitter image:', error);
+      res.status(404).send('Not found');
+    }
+  });
+  
+  // Add a route specifically for PNG if needed
+  app.get("/viberover-thumbnail.png", (req: Request, res: Response) => {
+    // Fallback to SVG since we don't have a PNG
+    const filePath = path.resolve(process.cwd(), './client/public/viberover-thumbnail.svg');
     
     try {
       const image = fs.readFileSync(filePath);
       
       // Set proper image headers
-      res.setHeader('Content-Type', 'image/png');
+      res.setHeader('Content-Type', 'image/svg+xml');
       res.setHeader('Cache-Control', 'public, max-age=86400');
       res.send(image);
     } catch (error) {
-      console.error('Error serving Twitter image:', error);
+      console.error('Error serving Twitter PNG image:', error);
       res.status(404).send('Not found');
     }
   });
