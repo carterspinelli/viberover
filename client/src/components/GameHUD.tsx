@@ -1,7 +1,5 @@
 
 import { useRef, useEffect, useState } from "react";
-import { useThree, useFrame } from "@react-three/fiber";
-import * as THREE from "three";
 import { useKeyboardControls } from "@react-three/drei";
 import { useRover } from "../lib/stores/useRover";
 import { useAudio } from "../lib/stores/useAudio";
@@ -33,7 +31,6 @@ interface GameHUDProps {
 const GameHUD = ({ username }: GameHUDProps) => {
   const { health, energy, velocity } = useRover();
   const { isMuted, toggleMute } = useAudio();
-  const { camera } = useThree();
 
   // Get keyboard inputs for visual feedback with selective state reading
   const forward = useKeyboardControls<Controls>(state => state[Controls.forward]);
@@ -59,6 +56,11 @@ const GameHUD = ({ username }: GameHUDProps) => {
           >
             {isMuted ? "🔇 Unmute" : "🔊 Mute"}
           </button>
+        </div>
+        
+        {/* Pilot name */}
+        <div className="mb-3 text-center">
+          <div className="text-sm text-gray-300">Pilot: <span className="font-bold text-orange-400">{username}</span></div>
         </div>
 
         {/* Health bar */}

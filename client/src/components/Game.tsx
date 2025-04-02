@@ -9,11 +9,7 @@ import { useAudio } from "../lib/stores/useAudio";
 import { useGame } from "../lib/stores/useGame";
 import * as THREE from "three";
 
-interface GameProps {
-  username: string;
-}
-
-const Game = ({ username }: GameProps) => {
+const Game = () => {
   const { camera } = useThree();
   const { backgroundMusic, isMuted } = useAudio();
   const { position, rotation, velocity } = useRover();
@@ -87,7 +83,6 @@ const Game = ({ username }: GameProps) => {
       
       <MarsEnvironment />
       <MarsRover />
-      <GameHUD username={username} />
     </>
   );
 };

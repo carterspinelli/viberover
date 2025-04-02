@@ -5,6 +5,7 @@ import { useAudio } from "./lib/stores/useAudio";
 import "@fontsource/inter";
 import Game from "./components/Game";
 import UsernamePrompt from "./components/UsernamePrompt";
+import GameHUD from "./components/GameHUD";
 
 // Define an enum for controls to ensure type safety
 export enum Controls {
@@ -60,28 +61,31 @@ function App() {
       {!username ? (
         <UsernamePrompt onSubmit={setUsername} />
       ) : (
-        <KeyboardControls map={controlsMap}>
-          <Canvas
-            shadows
-            camera={{
-              position: [0, 5, 10],
-              fov: 60,
-              near: 0.1,
-              far: 1000
-            }}
-            gl={{
-              antialias: true,
-              powerPreference: "default"
-            }}
-          >
-            <color attach="background" args={["#000000"]} />
-            <fog attach="fog" args={["#270000", 30, 90]} />
-            
-            <Suspense fallback={null}>
-              <Game username={username} />
-            </Suspense>
-          </Canvas>
-        </KeyboardControls>
+        <>
+          <KeyboardControls map={controlsMap}>
+            <Canvas
+              shadows
+              camera={{
+                position: [0, 5, 10],
+                fov: 60,
+                near: 0.1,
+                far: 1000
+              }}
+              gl={{
+                antialias: true,
+                powerPreference: "default"
+              }}
+            >
+              <color attach="background" args={["#000000"]} />
+              <fog attach="fog" args={["#270000", 30, 90]} />
+              
+              <Suspense fallback={null}>
+                <Game />
+              </Suspense>
+            </Canvas>
+          </KeyboardControls>
+          <GameHUD username={username} />
+        </>
       )}
     </div>
   );
