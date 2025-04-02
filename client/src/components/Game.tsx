@@ -4,12 +4,31 @@ import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import MarsRover from "./MarsRover";
 import MarsEnvironment from "./MarsEnvironment";
 import GameHUD from "./GameHUD";
+import VibePortal from "./VibePortal";
 import { useRover } from "../lib/stores/useRover";
 import { useAudio } from "../lib/stores/useAudio";
 import { useGame } from "../lib/stores/useGame";
 import * as THREE from "three";
 
-const Game = () => {
+interface GameProps {
+  username: string;
+  portalParams: {
+    isFromPortal: boolean;
+    refUrl: string;
+    speed: number;
+    color: string;
+    avatarUrl: string;
+    team: string;
+    speedX: number;
+    speedY: number;
+    speedZ: number;
+    rotationX: number;
+    rotationY: number;
+    rotationZ: number;
+  }
+}
+
+const Game = ({ username, portalParams }: GameProps) => {
   const { camera } = useThree();
   const { backgroundMusic, isMuted } = useAudio();
   const { position, rotation, velocity } = useRover();
@@ -83,6 +102,28 @@ const Game = () => {
       
       <MarsEnvironment />
       <MarsRover />
+      
+      {/* Exit Portal */}
+      <VibePortal 
+        position={[50, 0, -50]} 
+        rotation={[0, 0, 0]} 
+        color="#00ff00" 
+        label="VIBEVERSE PORTAL" 
+        portalUrl="https://portal.pieter.com" 
+        username={username}
+      />
+      
+      {/* Start Portal - Only visible if we came from another portal */}
+      {portalParams.isFromPortal && portalParams.refUrl && (
+        <VibePortal 
+          position={[-10, 0, 0]} 
+          rotation={[0, 0, 0]} 
+          color="#ff0000" 
+          label="RETURN PORTAL" 
+          portalUrl={portalParams.refUrl} 
+          username={username}
+        />
+      )}
     </>
   );
 };
