@@ -38,10 +38,10 @@ export const useRover = create<RoverState>((set, get) => ({
   position: new THREE.Vector3(0, 0, 0),
   rotation: new THREE.Euler(0, 0, 0),
   velocity: 0,
-  maxVelocity: 5,
-  acceleration: 2,
-  deceleration: 3,
-  turnSpeed: 1.5,
+  maxVelocity: 7, // Increased to 7.0 m/s as requested
+  acceleration: 3, // Slightly increased for faster response
+  deceleration: 4, // Increased for better braking
+  turnSpeed: 1.8, // Slightly increased for better handling
   
   // Movement smoothing
   targetVelocity: 0,
@@ -71,14 +71,21 @@ export const useRover = create<RoverState>((set, get) => ({
   decelerate: (delta) => {
     const state = get();
     
-    // Only decelerate if we have energy
-    if (state.energy > 0) {
-      // Set target velocity to negative for reverse
-      set({ targetVelocity: -state.maxVelocity / 1.5 });
-      
-      // Use energy when decelerating
-      const energyUsed = delta * 4;
-      state.useEnergy(energyUsed);
+    // Check if we need to brake or move in reverse
+    if (Math.abs(state.velocity) > 0.1 && state.velocity > 0) {
+      // We're moving forward, so brake to stop first
+      set({ targetVelocity: 0 });
+    } else {
+      // We're either stopped or moving backward, so accelerate in reverse
+      // Only if we have energy
+      if (state.energy > 0) {
+        // Set target velocity to negative for reverse, equal to forward max speed
+        set({ targetVelocity: -state.maxVelocity });
+        
+        // Use energy when accelerating in reverse
+        const energyUsed = delta * 4;
+        state.useEnergy(energyUsed);
+      }
     }
   },
   

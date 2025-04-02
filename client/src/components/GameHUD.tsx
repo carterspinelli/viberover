@@ -29,7 +29,7 @@ interface GameHUDProps {
 }
 
 const GameHUD = ({ username }: GameHUDProps) => {
-  const { health, energy, velocity } = useRover();
+  const { energy, velocity } = useRover();
   const { isMuted, toggleMute } = useAudio();
 
   // Get keyboard inputs for visual feedback with selective state reading
@@ -42,6 +42,7 @@ const GameHUD = ({ username }: GameHUDProps) => {
   const getDirectionIndicator = () => {
     if (velocity > 0.1) return "↑";
     if (velocity < -0.1) return "↓";
+    if (Math.abs(velocity) < 0.1 && Math.abs(velocity) > 0) return "⊗"; // Braking indicator
     return "•";
   };
 
@@ -62,21 +63,7 @@ const GameHUD = ({ username }: GameHUDProps) => {
         <div className="mb-3 text-center">
           <div className="text-sm text-gray-300">Pilot: <span className="font-bold text-orange-400">{username}</span></div>
         </div>
-
-        {/* Health bar */}
-        <div className="mb-2">
-          <div className="flex justify-between mb-1">
-            <span className="text-sm font-medium">Health</span>
-            <span className="text-sm">{Math.floor(health)}%</span>
-          </div>
-          <div className="w-full bg-gray-700 rounded-full h-2.5">
-            <div 
-              className="bg-red-600 h-2.5 rounded-full" 
-              style={{ width: `${health}%` }}
-            ></div>
-          </div>
-        </div>
-
+        
         {/* Energy bar */}
         <div className="mb-2">
           <div className="flex justify-between mb-1">
@@ -98,10 +85,18 @@ const GameHUD = ({ username }: GameHUDProps) => {
             <div className="flex items-center">
               <span className="text-sm mr-2">{Math.abs(velocity).toFixed(2)} m/s</span>
               <span className={`w-6 h-6 flex items-center justify-center rounded-full 
-                ${Math.abs(velocity) > 0.1 ? 'bg-blue-700' : 'bg-gray-700'}`}>
+                ${Math.abs(velocity) > 5 ? 'bg-green-600' : 
+                  Math.abs(velocity) > 0.1 ? 'bg-blue-700' : 'bg-gray-700'}`}>
                 {getDirectionIndicator()}
               </span>
             </div>
+          </div>
+          {/* Speed bar for visualization */}
+          <div className="w-full bg-gray-700 rounded-full h-2.5 mt-1">
+            <div 
+              className={`h-2.5 rounded-full ${velocity > 0 ? 'bg-green-600' : velocity < 0 ? 'bg-yellow-600' : 'bg-gray-600'}`}
+              style={{ width: `${Math.min(100, (Math.abs(velocity) / 7) * 100)}%` }}
+            ></div>
           </div>
         </div>
 
@@ -118,9 +113,10 @@ const GameHUD = ({ username }: GameHUDProps) => {
         </div>
 
         {/* Controls reminder */}
-        <div className="mt-3 grid grid-cols-2 gap-1 text-xs text-gray-300">
-          <div>W: Move Forward</div>
-          <div>S: Move Backward</div>
+        <div className="mt-3 grid grid-cols-1 gap-1 text-xs text-gray-300">
+          <div>W: Move Forward (Max: 7.00 m/s)</div>
+          <div>S: When moving forward - Brake to stop</div>
+          <div>S: When stopped - Move Backward (Max: 7.00 m/s)</div>
           <div>A: Turn Left</div>
           <div>D: Turn Right</div>
           <div>M: Toggle Sound</div>
