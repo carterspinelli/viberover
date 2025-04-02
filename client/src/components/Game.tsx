@@ -14,6 +14,7 @@ const Game = () => {
   const { backgroundMusic, isMuted } = useAudio();
   const { position, rotation, velocity } = useRover();
   const { phase, start } = useGame();
+  const [username, setUsername] = useState<string>('');
   const cameraRef = useRef<THREE.PerspectiveCamera>(null);
   
   // Camera smoothing
@@ -72,27 +73,24 @@ const Game = () => {
 
   return (
     <>
-      {/* Custom camera that follows the rover */}
-      <PerspectiveCamera 
-        ref={cameraRef}
-        makeDefault 
-        position={[0, 5, 10]} 
-        fov={60}
-        near={0.1}
-        far={1000}
-      />
-      
-      {/* Mars environment and lighting */}
-      <MarsEnvironment />
-      
-      {/* The rover player can control */}
-      <MarsRover />
-      
-      {/* Debug controls - disabled in final game */}
-      {/* <OrbitControls /> */}
-      
-      {/* HUD overlay */}
-      <GameHUD />
+      {!username ? (
+        <UsernamePrompt onSubmit={setUsername} />
+      ) : (
+        <>
+          <PerspectiveCamera 
+            ref={cameraRef}
+            makeDefault 
+            position={[0, 5, 10]} 
+            fov={60}
+            near={0.1}
+            far={1000}
+          />
+          
+          <MarsEnvironment />
+          <MarsRover />
+          <GameHUD username={username} />
+        </>
+      )}
     </>
   );
 };

@@ -26,7 +26,11 @@ const KeyDisplay = ({
   </div>
 );
 
-const GameHUD = () => {
+interface GameHUDProps {
+  username: string;
+}
+
+const GameHUD = ({ username }: GameHUDProps) => {
   const { health, energy, velocity } = useRover();
   const { isMuted, toggleMute } = useAudio();
   const { camera } = useThree();
@@ -45,8 +49,7 @@ const GameHUD = () => {
   };
 
   return (
-    <Html position={[-100, 0, 0]} transform={false} distanceFactor={10} prepend portal>
-      <div className="fixed left-4 top-4 w-64" style={{ pointerEvents: 'auto' }}> {/* Fixed position with padding */}
+    <div className="fixed left-4 top-4 w-64 z-50" style={{ pointerEvents: 'auto' }}> {/* Fixed position with padding */}
         <div className="bg-black bg-opacity-60 p-3 rounded-lg text-white"> {/* Removed max-w-md and mx-auto */}
           <div className="flex justify-between items-center mb-2">
             <h2 className="text-xl font-bold">Mars Rover Status</h2>
