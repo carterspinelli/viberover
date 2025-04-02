@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VIBEROVER Twitter Card</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #000000;
+    }
+    .card {
+      width: 1200px;
+      height: 630px;
+      position: relative;
+      overflow: hidden;
+      background: #000;
+    }
+    .background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(45deg, #8C1D13 0%, #D92525 50%, #F2C063 100%);
+      opacity: 0.8;
+    }
+    .stars {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 10px),
+                        radial-gradient(white, rgba(255,255,255,.15) 1px, transparent 5px),
+                        radial-gradient(white, rgba(255,255,255,.1) 2px, transparent 6px);
+      background-size: 550px 550px, 350px 350px, 250px 250px;
+      background-position: 0 0, 40px 60px, 130px 270px;
+      opacity: 0.3;
+    }
+    .title {
+      position: absolute;
+      top: 60px;
+      left: 60px;
+      color: white;
+      font-weight: 800;
+      font-size: 90px;
+      line-height: 1;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.5);
+      z-index: 2;
+    }
+    .subtitle {
+      position: absolute;
+      top: 170px;
+      left: 65px;
+      color: #F2C063;
+      font-size: 30px;
+      max-width: 650px;
+      line-height: 1.3;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+      z-index: 2;
+    }
+    .rover-image {
+      position: absolute;
+      bottom: -20px;
+      right: 50px;
+      width: 500px;
+      height: 350px;
+      z-index: 3;
+      transform: rotate(5deg);
+    }
+    .portal {
+      position: absolute;
+      top: 220px;
+      left: 70px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0,255,0,0.7) 0%, rgba(0,255,0,0) 70%);
+      filter: blur(5px);
+      animation: pulse 2s infinite;
+      z-index: 1;
+    }
+    @keyframes pulse {
+      0% { opacity: 0.5; transform: scale(0.95); }
+      50% { opacity: 0.9; transform: scale(1.05); }
+      100% { opacity: 0.5; transform: scale(0.95); }
+    }
+    .footer {
+      position: absolute;
+      bottom: 30px;
+      left: 60px;
+      color: white;
+      font-size: 24px;
+      opacity: 0.8;
+    }
+    .vibe-text {
+      position: absolute;
+      top: 380px;
+      left: 65px;
+      font-size: 24px;
+      color: white;
+      max-width: 600px;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="background"></div>
+    <div class="stars"></div>
+    
+    <h1 class="title">VIBEROVER</h1>
+    <h2 class="subtitle">Navigate the red planet's mysteries in this immersive 3D Mars exploration game</h2>
+    
+    <div class="vibe-text">Discover the hidden vibeverse portal and transcend reality!</div>
+    
+    <div class="portal"></div>
+    
+    <div class="rover-image">
+      <svg viewBox="0 0 450 320" xmlns="http://www.w3.org/2000/svg" style="width:100%; height:100%;">
+        <!-- Simplified rover silhouette -->
+        <rect x="100" y="240" width="240" height="40" rx="10" fill="#DDD" />
+        <!-- Wheels -->
+        <circle cx="120" cy="290" r="30" fill="#555" />
+        <circle cx="320" cy="290" r="30" fill="#555" />
+        <circle cx="220" cy="290" r="30" fill="#555" />
+        <!-- Body -->
+        <rect x="120" y="140" width="200" height="100" rx="10" fill="#D92525" />
+        <!-- Solar panels -->
+        <rect x="50" y="120" width="120" height="10" fill="#17A1E6" />
+        <rect x="270" y="120" width="120" height="10" fill="#17A1E6" />
+        <!-- Antenna -->
+        <line x1="220" y1="140" x2="220" y2="60" stroke="#888" stroke-width="4" />
+        <circle cx="220" cy="55" r="10" fill="#888" />
+        <!-- Camera -->
+        <rect x="170" y="100" width="100" height="40" rx="5" fill="#333" />
+        <circle cx="220" cy="120" r="15" fill="#111" />
+      </svg>
+    </div>
+    
+    <div class="footer">VIBEROVER · Established 2025</div>
+  </div>
+</body>
+</html>

@@ -3,121 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VIBEROVER: Mars Exploration Game</title>
+  <title>VIBEROVER Twitter Card</title>
   <style>
-    body {
+    body, html {
       margin: 0;
       padding: 0;
-      font-family: 'Helvetica Neue', Arial, sans-serif;
-      background-color: #0f0f0f;
-      color: #fff;
-      line-height: 1.6;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      background-color: #1a1a1a;
-      min-height: 100vh;
+      font-family: Arial, sans-serif;
+      width: 100%;
+      height: 100%;
+      background-color: #000;
     }
     .card {
-      background-color: #222;
-      border-radius: 16px;
+      width: 1200px;
+      height: 630px;
+      background: #000;
+      position: relative;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      margin-bottom: 30px;
+      color: #fff;
     }
-    .card-image {
+    .mars-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: auto;
+      height: 100%;
+      background: linear-gradient(135deg, #461220 0%, #8C1C13 50%, #BF4342 100%);
+      opacity: 0.7;
     }
-    .card-content {
-      padding: 20px 30px 30px;
+    .rover {
+      position: absolute;
+      bottom: 50px;
+      right: 100px;
+      width: 400px;
+      height: 300px;
+      background: url('/viberover-thumbnail.svg') no-repeat center center;
+      background-size: contain;
+    }
+    .content {
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      width: 600px;
     }
     h1 {
-      font-size: 28px;
-      margin: 0 0 15px 0;
-      color: #ff8020;
+      font-size: 72px;
+      margin: 0 0 20px 0;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
     p {
-      margin-bottom: 20px;
-      font-size: 18px;
+      font-size: 24px;
+      margin: 0 0 30px 0;
+      line-height: 1.5;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
     }
-    .cta-button {
-      display: inline-block;
-      background: linear-gradient(135deg, #ff5a00, #ff8020);
-      color: white;
-      text-decoration: none;
-      padding: 12px 30px;
-      border-radius: 30px;
-      font-weight: bold;
-      font-size: 18px;
-      margin-top: 10px;
-      transition: transform 0.2s, box-shadow 0.2s;
+    .portal {
+      position: absolute;
+      top: 100px;
+      right: 50px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #00ff00 0%, rgba(0,255,0,0) 70%);
+      filter: blur(5px);
+      animation: pulse 2s infinite;
     }
-    .cta-button:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(255, 80, 0, 0.4);
-    }
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      margin-top: 20px;
-    }
-    .feature {
-      flex: 1;
-      min-width: 200px;
-      padding: 15px;
-      margin: 10px;
-      background-color: rgba(255, 80, 0, 0.1);
-      border-radius: 10px;
-      border-left: 3px solid #ff8020;
-    }
-    .feature h3 {
-      margin-top: 0;
-      color: #ff8020;
-    }
-    @media (max-width: 600px) {
-      .container {
-        padding: 10px;
-      }
-      .card-content {
-        padding: 15px;
-      }
-      h1 {
-        font-size: 24px;
-      }
-      p {
-        font-size: 16px;
-      }
+    @keyframes pulse {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <div class="card">
-      <img src="./viberover-thumbnail.svg" alt="VIBEROVER Mars Exploration Game" class="card-image">
-      <div class="card-content">
-        <h1>VIBEROVER: Mars Exploration Game</h1>
-        <p>DISCOVER MARS & BEYOND: Navigate the red planet's mysteries in #VibeRover, then transcend reality as you find the hidden vibeverse portal. An immersive 3D adventure where exploration leads to cosmic connection.</p>
-        <a href="/" class="cta-button">Play Now</a>
-        
-        <div class="features">
-          <div class="feature">
-            <h3>Explore Mars</h3>
-            <p>Navigate challenging terrain across the red planet with realistic physics and controls.</p>
-          </div>
-          <div class="feature">
-            <h3>Discover Portals</h3>
-            <p>Find mysterious portals that connect to the wider Vibeverse ecosystem.</p>
-          </div>
-          <div class="feature">
-            <h3>3D Immersion</h3>
-            <p>Experience Mars in stunning 3D with realistic graphics and atmospheric effects.</p>
-          </div>
-        </div>
-      </div>
+  <div class="card">
+    <div class="mars-bg"></div>
+    <div class="portal"></div>
+    <div class="content">
+      <h1>VIBEROVER</h1>
+      <p>DISCOVER MARS & BEYOND: Navigate the red planet's mysteries, then transcend reality as you find the hidden vibeverse portal.</p>
     </div>
+    <div class="rover"></div>
   </div>
 </body>
 </html>
