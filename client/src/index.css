@@ -28,3 +28,16 @@ canvas {
   height: 100% !important;
   touch-action: none;
 }
+
+/* Mars dust particle animation */
+@keyframes float {
+  0% {
+    transform: translateY(0) translateX(0);
+  }
+  50% {
+    transform: translateY(-40vh) translateX(20vw);
+  }
+  100% {
+    transform: translateY(-80vh) translateX(0);
+  }
+}
