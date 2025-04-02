@@ -149,6 +149,23 @@ const Boulder = ({ position, scale, rotation }: {
   scale: number,
   rotation: number
 }) => {
+  // Use useMemo to ensure the boulder remains stable
+  const boulderProps = useMemo(() => {
+    // Slightly randomize the boulder to make each one unique
+    // but stable across renders
+    const color = new THREE.Color(
+      0.55 + Math.random() * 0.05,
+      0.22 + Math.random() * 0.05,
+      0.05 + Math.random() * 0.02
+    );
+    
+    // Create a unique but stable geometry deformation
+    const roughness = 0.8 + Math.random() * 0.15;
+    const metalness = 0.1 + Math.random() * 0.1;
+    
+    return { color, roughness, metalness };
+  }, [scale]); // Only recompute if scale changes
+  
   return (
     <mesh
       position={position}
@@ -158,9 +175,9 @@ const Boulder = ({ position, scale, rotation }: {
     >
       <dodecahedronGeometry args={[scale, 1]} />
       <meshStandardMaterial 
-        color="#963c06"
-        roughness={0.85}
-        metalness={0.15}
+        color={boulderProps.color}
+        roughness={boulderProps.roughness}
+        metalness={boulderProps.metalness}
       />
     </mesh>
   );
@@ -172,48 +189,58 @@ const RockFormation = ({ position, scale, rotation }: {
   scale: number,
   rotation: number
 }) => {
-  // Generate a random rock formation with multiple parts
-  const rockCount = Math.floor(3 + Math.random() * 5);
-  const rocks = [];
-  
-  for (let i = 0; i < rockCount; i++) {
-    // Random offset from center position
-    const offsetX = (Math.random() - 0.5) * scale * 1.5;
-    const offsetZ = (Math.random() - 0.5) * scale * 1.5;
-    const offsetY = Math.random() * scale * 0.5;
+  // Use useMemo to ensure rock formation remains stable
+  const rocks = useMemo(() => {
+    // Generate a random rock formation with multiple parts
+    const rockCount = Math.floor(3 + Math.random() * 5);
+    const rockElements = [];
     
-    // Random individual rock size
-    const rockSize = (0.5 + Math.random() * 0.7) * scale;
+    for (let i = 0; i < rockCount; i++) {
+      // Random offset from center position
+      const offsetX = (Math.random() - 0.5) * scale * 1.5;
+      const offsetZ = (Math.random() - 0.5) * scale * 1.5;
+      const offsetY = Math.random() * scale * 0.5;
+      
+      // Random individual rock size
+      const rockSize = (0.5 + Math.random() * 0.7) * scale;
+      
+      // Precompute colors and properties to prevent re-randomization
+      const rockColor = new THREE.Color(
+        0.55 + Math.random() * 0.1,
+        0.25 + Math.random() * 0.1,
+        0.05 + Math.random() * 0.05
+      );
+      
+      const rockRotation = [
+        Math.random() * Math.PI * 0.2,
+        Math.random() * Math.PI * 2,
+        Math.random() * Math.PI * 0.2
+      ] as [number, number, number];
+      
+      rockElements.push(
+        <mesh
+          key={`formation-rock-${i}`}
+          position={[
+            position[0] + offsetX,
+            position[1] + offsetY,
+            position[2] + offsetZ
+          ]}
+          rotation={rockRotation}
+          castShadow
+          receiveShadow
+        >
+          <dodecahedronGeometry args={[rockSize, 1]} />
+          <meshStandardMaterial 
+            color={rockColor}
+            roughness={0.8 + Math.random() * 0.2}
+            metalness={0.05 + Math.random() * 0.1}
+          />
+        </mesh>
+      );
+    }
     
-    rocks.push(
-      <mesh
-        key={`formation-rock-${i}`}
-        position={[
-          position[0] + offsetX,
-          position[1] + offsetY,
-          position[2] + offsetZ
-        ]}
-        rotation={[
-          Math.random() * Math.PI * 0.2,
-          Math.random() * Math.PI * 2,
-          Math.random() * Math.PI * 0.2
-        ]}
-        castShadow
-        receiveShadow
-      >
-        <dodecahedronGeometry args={[rockSize, 1]} />
-        <meshStandardMaterial 
-          color={new THREE.Color(
-            0.55 + Math.random() * 0.1,
-            0.25 + Math.random() * 0.1,
-            0.05 + Math.random() * 0.05
-          )}
-          roughness={0.8 + Math.random() * 0.2}
-          metalness={0.05 + Math.random() * 0.1}
-        />
-      </mesh>
-    );
-  }
+    return rockElements;
+  }, [position, scale]); // Dependencies ensure stability unless props change
   
   return <group rotation={[0, rotation, 0]}>{rocks}</group>;
 };
