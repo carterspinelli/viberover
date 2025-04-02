@@ -14,6 +14,9 @@
     overflow: hidden;
     width: 100vw;
     height: 100vh;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    overscroll-behavior: none;
   }
 }
 
@@ -27,6 +30,53 @@ canvas {
   width: 100% !important;
   height: 100% !important;
   touch-action: none;
+}
+
+/* Enhanced styling for mobile touch buttons */
+.touch-btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.15s ease, background-color 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.touch-btn:active {
+  transform: scale(0.95);
+}
+
+.touch-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.touch-btn:active::after {
+  opacity: 1;
+}
+
+/* Direction buttons specific styles */
+.direction-btn {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 140, 0, 0.5);
+}
+
+/* Boost button specific styles */
+.boost-btn {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 60, 60, 0.5);
+  background: linear-gradient(135deg, rgba(100, 0, 0, 0.6), rgba(180, 0, 0, 0.6));
+}
+
+.boost-btn:active {
+  background: linear-gradient(135deg, rgba(180, 0, 0, 0.8), rgba(255, 60, 0, 0.8));
 }
 
 /* Mars dust particle animation */
