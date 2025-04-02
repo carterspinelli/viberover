@@ -127,7 +127,8 @@ export const useRover = create<RoverState>((set, get) => ({
     if (state.turnDirection !== 0 && Math.abs(state.velocity) > 0.1) {
       // Turn speed is proportional to velocity for more realistic turning
       const actualTurnSpeed = state.turnSpeed * Math.min(1, Math.abs(state.velocity) / 2);
-      newRotation.y += state.turnDirection * actualTurnSpeed * delta;
+      // Reverse the turn direction because the model is rotated 180 degrees
+      newRotation.y -= state.turnDirection * actualTurnSpeed * delta;
       
       // Use energy when turning
       const energyUsed = delta * 0.5;
@@ -138,8 +139,9 @@ export const useRover = create<RoverState>((set, get) => ({
     const newPosition = state.position.clone();
     
     // Move in the direction the rover is facing
-    newPosition.x += Math.sin(state.rotation.y) * newVelocity * delta;
-    newPosition.z += Math.cos(state.rotation.y) * newVelocity * delta;
+    // Use negative values because the model is rotated 180 degrees
+    newPosition.x -= Math.sin(state.rotation.y) * newVelocity * delta;
+    newPosition.z -= Math.cos(state.rotation.y) * newVelocity * delta;
     
     // Automatic friction when no user input
     if (Math.abs(state.targetVelocity) < 0.1) {

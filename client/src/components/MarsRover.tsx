@@ -63,7 +63,8 @@ const MarsRover = () => {
       
       // Setup model
       roverModel.position.set(0, 0, 0);
-      roverModel.rotation.set(0, 0, 0);
+      // Rotate the model 180 degrees to face the correct direction
+      roverModel.rotation.set(0, Math.PI, 0);
       roverModel.scale.set(0.5, 0.5, 0.5);
       
       console.log("Mars rover model loaded successfully");
