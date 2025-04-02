@@ -61,8 +61,8 @@ function App() {
       {!username ? (
         <UsernamePrompt onSubmit={setUsername} />
       ) : (
-        <>
-          <KeyboardControls map={controlsMap}>
+        <KeyboardControls map={controlsMap}>
+          <>
             <Canvas
               shadows
               camera={{
@@ -83,9 +83,9 @@ function App() {
                 <Game />
               </Suspense>
             </Canvas>
-          </KeyboardControls>
-          <GameHUD username={username} />
-        </>
+            <GameHUD username={username} />
+          </>
+        </KeyboardControls>
       )}
     </div>
   );
