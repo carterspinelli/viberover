@@ -11,6 +11,10 @@ interface RoverState {
   deceleration: number;
   turnSpeed: number;
   
+  // Movement smoothing
+  targetVelocity: number;
+  turnDirection: number; // -1 = left, 0 = none, 1 = right
+  
   // Game state
   health: number;
   energy: number;
@@ -21,6 +25,7 @@ interface RoverState {
   decelerate: (delta: number) => void;
   turnLeft: (delta: number) => void;
   turnRight: (delta: number) => void;
+  stopTurning: () => void;
   updatePosition: (delta: number) => void;
   setColliding: (isColliding: boolean) => void;
   takeDamage: (amount: number) => void;
@@ -38,6 +43,10 @@ export const useRover = create<RoverState>((set, get) => ({
   deceleration: 3,
   turnSpeed: 1.5,
   
+  // Movement smoothing
+  targetVelocity: 0,
+  turnDirection: 0,
+  
   // Initial game state
   health: 100,
   energy: 100,
@@ -49,20 +58,13 @@ export const useRover = create<RoverState>((set, get) => ({
     
     // Only accelerate if we have energy
     if (state.energy > 0) {
-      let newVelocity = state.velocity + state.acceleration * delta;
-      
-      // Cap velocity at max
-      if (newVelocity > state.maxVelocity) {
-        newVelocity = state.maxVelocity;
-      }
+      // Set target velocity instead of directly changing velocity
+      // This enables smoother acceleration
+      set({ targetVelocity: state.maxVelocity });
       
       // Use energy when accelerating
-      const energyUsed = delta * 5;
-      if (newVelocity !== state.velocity) {
-        state.useEnergy(energyUsed);
-      }
-      
-      set({ velocity: newVelocity });
+      const energyUsed = delta * 4;
+      state.useEnergy(energyUsed);
     }
   },
   
@@ -71,77 +73,92 @@ export const useRover = create<RoverState>((set, get) => ({
     
     // Only decelerate if we have energy
     if (state.energy > 0) {
-      let newVelocity = state.velocity - state.deceleration * delta;
-      
-      // Cap reverse velocity
-      if (newVelocity < -state.maxVelocity / 2) {
-        newVelocity = -state.maxVelocity / 2;
-      }
+      // Set target velocity to negative for reverse
+      set({ targetVelocity: -state.maxVelocity / 1.5 });
       
       // Use energy when decelerating
-      const energyUsed = delta * 5;
-      if (newVelocity !== state.velocity) {
-        state.useEnergy(energyUsed);
-      }
-      
-      set({ velocity: newVelocity });
+      const energyUsed = delta * 4;
+      state.useEnergy(energyUsed);
     }
   },
   
   turnLeft: (delta) => {
-    const state = get();
-    const newRotation = state.rotation.clone();
-    newRotation.y += state.turnSpeed * delta;
-    
-    // Use a small amount of energy when turning
-    state.useEnergy(delta * 1);
-    
-    set({ rotation: newRotation });
+    // Set turn direction to left (-1)
+    set({ turnDirection: -1 });
   },
   
   turnRight: (delta) => {
-    const state = get();
-    const newRotation = state.rotation.clone();
-    newRotation.y -= state.turnSpeed * delta;
-    
-    // Use a small amount of energy when turning
-    state.useEnergy(delta * 1);
-    
-    set({ rotation: newRotation });
+    // Set turn direction to right (1)
+    set({ turnDirection: 1 });
+  },
+  
+  stopTurning: () => {
+    // Reset turn direction
+    set({ turnDirection: 0 });
   },
   
   updatePosition: (delta) => {
     const state = get();
-    const velocity = state.velocity;
     
     // Don't move if colliding and trying to move forward
-    if (state.isColliding && velocity > 0) {
-      set({ velocity: 0 });
+    if (state.isColliding && state.velocity > 0) {
+      set({ velocity: 0, targetVelocity: 0 });
       return;
+    }
+    
+    // Smoothly adjust velocity towards target
+    let newVelocity = state.velocity;
+    if (state.targetVelocity > state.velocity) {
+      // Accelerating
+      newVelocity = state.velocity + state.acceleration * delta;
+      if (newVelocity > state.targetVelocity) {
+        newVelocity = state.targetVelocity;
+      }
+    } else if (state.targetVelocity < state.velocity) {
+      // Slowing down
+      newVelocity = state.velocity - state.deceleration * delta;
+      if (newVelocity < state.targetVelocity) {
+        newVelocity = state.targetVelocity;
+      }
+    }
+    
+    // Apply turning based on turn direction
+    let newRotation = state.rotation.clone();
+    if (state.turnDirection !== 0 && Math.abs(state.velocity) > 0.1) {
+      // Turn speed is proportional to velocity for more realistic turning
+      const actualTurnSpeed = state.turnSpeed * Math.min(1, Math.abs(state.velocity) / 2);
+      newRotation.y += state.turnDirection * actualTurnSpeed * delta;
+      
+      // Use energy when turning
+      const energyUsed = delta * 0.5;
+      state.useEnergy(energyUsed);
     }
     
     // Calculate new position based on velocity and rotation
     const newPosition = state.position.clone();
     
     // Move in the direction the rover is facing
-    newPosition.x += Math.sin(state.rotation.y) * velocity * delta;
-    newPosition.z += Math.cos(state.rotation.y) * velocity * delta;
+    newPosition.x += Math.sin(state.rotation.y) * newVelocity * delta;
+    newPosition.z += Math.cos(state.rotation.y) * newVelocity * delta;
     
-    // Slow down automatically if no input (simulate friction)
-    let newVelocity = velocity;
-    if (Math.abs(velocity) > 0.01) {
-      newVelocity *= 0.98; // Friction factor
-    } else {
-      newVelocity = 0;
+    // Automatic friction when no user input
+    if (Math.abs(state.targetVelocity) < 0.1) {
+      // Apply stronger friction to make it stop naturally
+      if (Math.abs(newVelocity) > 0.1) {
+        newVelocity *= 0.95; // Stronger friction when coasting
+      } else {
+        newVelocity = 0; // Stop completely at low speeds
+      }
     }
     
     // Recharge energy when not moving rapidly
-    if (Math.abs(velocity) < 1) {
-      state.rechargeEnergy(delta * 2);
+    if (Math.abs(newVelocity) < 1) {
+      state.rechargeEnergy(delta * 3);
     }
     
     set({ 
       position: newPosition,
+      rotation: newRotation,
       velocity: newVelocity
     });
   },
@@ -152,7 +169,7 @@ export const useRover = create<RoverState>((set, get) => ({
     
     // Take damage when a new collision occurs
     if (isColliding && !state.isColliding) {
-      state.takeDamage(10 * Math.abs(state.velocity));
+      state.takeDamage(8 * Math.abs(state.velocity));
     }
     
     set({ isColliding });

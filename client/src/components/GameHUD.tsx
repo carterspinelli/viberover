@@ -1,14 +1,47 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useThree, useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useKeyboardControls } from "@react-three/drei";
 import { useRover } from "../lib/stores/useRover";
 import { Html } from "@react-three/drei";
 import { useAudio } from "../lib/stores/useAudio";
+import { Controls } from "../App";
+
+// A visual key component to show which keys are pressed
+const KeyDisplay = ({ 
+  isPressed, 
+  label 
+}: { 
+  isPressed: boolean, 
+  label: string 
+}) => (
+  <div 
+    className={`inline-flex justify-center items-center w-8 h-8 mx-1 border rounded ${
+      isPressed 
+        ? "bg-orange-700 border-orange-500 text-white" 
+        : "bg-gray-800 border-gray-700 text-gray-400"
+    }`}
+  >
+    {label}
+  </div>
+);
 
 const GameHUD = () => {
   const { health, energy, velocity } = useRover();
   const { isMuted, toggleMute } = useAudio();
+  
+  // Get keyboard inputs for visual feedback with selective state reading
+  const forward = useKeyboardControls<Controls>(state => state[Controls.forward]);
+  const backward = useKeyboardControls<Controls>(state => state[Controls.backward]);
+  const leftward = useKeyboardControls<Controls>(state => state[Controls.leftward]);
+  const rightward = useKeyboardControls<Controls>(state => state[Controls.rightward]);
+  
+  // Direction indicator using an arrow
+  const getDirectionIndicator = () => {
+    if (velocity > 0.1) return "↑";
+    if (velocity < -0.1) return "↓";
+    return "•";
+  };
   
   return (
     <Html fullscreen>
@@ -52,20 +85,38 @@ const GameHUD = () => {
             </div>
           </div>
           
-          {/* Speed indicator */}
-          <div>
-            <div className="flex justify-between">
+          {/* Speed indicator with direction */}
+          <div className="mb-2">
+            <div className="flex justify-between items-center">
               <span className="text-sm font-medium">Speed</span>
-              <span className="text-sm">{Math.abs(velocity).toFixed(2)} m/s</span>
+              <div className="flex items-center">
+                <span className="text-sm mr-2">{Math.abs(velocity).toFixed(2)} m/s</span>
+                <span className={`w-6 h-6 flex items-center justify-center rounded-full 
+                  ${Math.abs(velocity) > 0.1 ? 'bg-blue-700' : 'bg-gray-700'}`}>
+                  {getDirectionIndicator()}
+                </span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Visual controls display */}
+          <div className="mt-3 mb-1 text-center">
+            <div className="flex justify-center mb-2">
+              <KeyDisplay isPressed={forward} label="W" />
+            </div>
+            <div className="flex justify-center">
+              <KeyDisplay isPressed={leftward} label="A" />
+              <KeyDisplay isPressed={backward} label="S" />
+              <KeyDisplay isPressed={rightward} label="D" />
             </div>
           </div>
           
           {/* Controls reminder */}
-          <div className="mt-4 grid grid-cols-2 gap-2 text-xs">
-            <div>W/↑: Move Forward</div>
-            <div>S/↓: Move Backward</div>
-            <div>A/←: Turn Left</div>
-            <div>D/→: Turn Right</div>
+          <div className="mt-3 grid grid-cols-2 gap-1 text-xs text-gray-300">
+            <div>W: Move Forward</div>
+            <div>S: Move Backward</div>
+            <div>A: Turn Left</div>
+            <div>D: Turn Right</div>
             <div>M: Toggle Sound</div>
           </div>
         </div>

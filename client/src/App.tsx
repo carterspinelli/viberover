@@ -5,13 +5,22 @@ import { useAudio } from "./lib/stores/useAudio";
 import "@fontsource/inter";
 import Game from "./components/Game";
 
-// Define control keys for the game
-const controls = [
-  { name: "forward", keys: ["KeyW", "ArrowUp"] },
-  { name: "backward", keys: ["KeyS", "ArrowDown"] },
-  { name: "leftward", keys: ["KeyA", "ArrowLeft"] },
-  { name: "rightward", keys: ["KeyD", "ArrowRight"] },
-  { name: "boost", keys: ["ShiftLeft", "ShiftRight"] },
+// Define an enum for controls to ensure type safety
+export enum Controls {
+  forward = "forward",
+  backward = "backward",
+  leftward = "leftward",
+  rightward = "rightward",
+  boost = "boost",
+}
+
+// Define control key mappings
+const controlsMap = [
+  { name: Controls.forward, keys: ["KeyW", "ArrowUp"] },
+  { name: Controls.backward, keys: ["KeyS", "ArrowDown"] },
+  { name: Controls.leftward, keys: ["KeyA", "ArrowLeft"] },
+  { name: Controls.rightward, keys: ["KeyD", "ArrowRight"] },
+  { name: Controls.boost, keys: ["ShiftLeft", "ShiftRight"] },
 ];
 
 // Main App component
@@ -46,7 +55,7 @@ function App() {
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden' }}>
-      <KeyboardControls map={controls}>
+      <KeyboardControls map={controlsMap}>
         <Canvas
           shadows
           camera={{
